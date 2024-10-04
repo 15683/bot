@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"log"
+
+	"github.com/15683/bot/events/telegram"
 )
 
 const (
