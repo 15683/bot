@@ -1,11 +1,13 @@
 package telegram
 
 import (
+	"errors"
 	"log"
 	"net/url"
 	"strings"
 
 	"github.com/15683/bot/lib/e"
+	"github.com/15683/bot/storage"
 )
 
 const (
@@ -20,22 +22,25 @@ func (p *Processor) doCmd(text string, chatID int, username string) error {
 	log.Printf("got new command '%s' from '%s'", text, username)
 
 	if isAddCmd(text) {
-		// TODO: AddPage()
+		return p.savePage(chatID, text, username)
 	}
 
 	switch text {
 	case RndCmd:
+		return p.sendRandom(chatID, username)
 	case HelpCmd:
+		return p.sendHelp(chatID, username)
 	case StartCmd:
+		return p.sendHello(chatID, username)
 	default:
-
+		return p.tg.SendMessage(chatID, msgUnknownCommand)
 	}
 }
 
 func (p *Processor) savePage(chatID int, pageURL string, username string) (err error) {
 	defer func() { err = e.WrapIfErr("can't command: save page", err) }()
 
-	page := &storafe.Page{
+	page := &storage.Page{
 		URL:      pageURL,
 		UserName: username,
 	}
@@ -57,6 +62,32 @@ func (p *Processor) savePage(chatID int, pageURL string, username string) (err e
 	}
 
 	return nil
+}
+
+func (p *Processor) SendRandom(chatID int, username string) (err error) {
+	defer func() { err = e.WrapIfErr("can't do command: can't send random", err) }()
+
+	page, err := p.storage.PickRandom(username)
+	if err != nil && !errors.Is(err, storage.ErrNoSavedPages) {
+		return err
+	}
+	if errors.Is(err, storage.ErrNoSavedPages) {
+		return p.tg.SendMessage(chatID, msgNoSavedPages)
+	}
+
+	if err := p.tg.SendMessage(chatID, page.URL); err != nil {
+		return err
+	}
+
+	return p.storage.Remove(page)
+}
+
+func (p *Processor) SendHelp(chatID int) error {
+	return p.tg.SendMessage(chatID, msgHelp)
+}
+
+func (p *Processor) SendHello(chatID int) error {
+	return p.tg.SendMessage(chatID, msgHello)
 }
 
 func isAddCmd(text string) bool {

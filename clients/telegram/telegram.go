@@ -6,7 +6,6 @@ import (
 	"net/url"
 	"path"
 	"strconv"
-	"bot/lib/e" //тоже самое, что и строка ниже с гитхаба?
 	"github.com/15683/bot/lib/e"
 )
 
@@ -21,8 +20,8 @@ const(
 	SendMessageMethod="sendMessage"
 )
 
-func New(host string, token string) Client {
-	return Client{
+func New(host string, token string) *Client {
+	return &Client{
 		host:     host,
 		basePath: newBasePath(token),
 		client:   http.Client{},
