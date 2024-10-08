@@ -74,22 +74,22 @@ func (c *Client) doRequest(method string, query url.Values) (data []byte, err er
 	}
 }
 
-req, err := http.NewRequest(http.MethodGet, u.String(), nil)
-if err != nil {
-	return nil, err
-}
+	req, err := http.NewRequest(http.MethodGet, u.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
-req.URL.RawQuery = query.Encode()
+	req.URL.RawQuery = query.Encode()
 
-resp, err := c.client.Do(req)
-if err != nil {
-	return nil, err
-}
-defer func() {_=resp.Body.Close()}()
+	resp, err := c.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer func() { _ = resp.Body.Close() }()
 
-body, err :=io.ReadAll(resp.Body)
-if err != nil {
-	return nil,err
-}
+	body, err :=io.ReadAll(resp.Body)
+	if err != nil {
+		return nil,err
+	}
 
-return body,nil
+	return body,nil

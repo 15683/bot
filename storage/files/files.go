@@ -26,9 +26,9 @@ func new(basePath string) Storage {
 func (s Storage) Save(page *storage.Page) (err error) {
 	defer func() { err = e.WrapIfErr("can't save page", err) }()
 
-	filePath := filepath.Join(s.basePath, page.UserName)
+	fPath := filepath.Join(s.basePath, page.UserName)
 
-	if err := os.MkdirAll(filePath, defaultPerm); err != nil {
+	if err := os.MkdirAll(fPath, defaultPerm); err != nil {
 		return err
 	}
 
@@ -68,6 +68,9 @@ func (s Storage) PickRandom(UserName string) (page *storage.Page, err error) {
 
 	rand.Seed(time.Now().UnixNano())
 	n := rand.Intn(len(files))
+
+	// r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	// n := r.Intn(len(files))
 
 	file := files[n]
 
