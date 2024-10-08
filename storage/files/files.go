@@ -1,16 +1,16 @@
 package files
 
 import (
-	"crypto/rand"
 	"encoding/gob"
 	"errors"
 	"fmt"
+	"math/rand"
 	"os"
 	"path/filepath"
 	"time"
 
-	"github.com/15683/bot/lib/e"
-	"github.com/15683/bot/storage"
+	"bot/lib/e"
+	"bot/storage"
 )
 
 type Storage struct {
@@ -19,8 +19,8 @@ type Storage struct {
 
 const defaultPerm = 0774
 
-func new(basePath string) Storage {
-	return Storage{basePath}
+func New(basePath string) Storage {
+	return Storage{basePath: basePath}
 }
 
 func (s Storage) Save(page *storage.Page) (err error) {
@@ -52,10 +52,10 @@ func (s Storage) Save(page *storage.Page) (err error) {
 	return nil
 }
 
-func (s Storage) PickRandom(UserName string) (page *storage.Page, err error) {
+func (s Storage) PickRandom(userName string) (page *storage.Page, err error) {
 	defer func() { err = e.WrapIfErr("can't pick random page", err) }()
 
-	path := filepath.Join(s.basePath, UserName)
+	path := filepath.Join(s.basePath, userName)
 
 	files, err := os.ReadDir(path)
 	if err != nil {
@@ -68,9 +68,6 @@ func (s Storage) PickRandom(UserName string) (page *storage.Page, err error) {
 
 	rand.Seed(time.Now().UnixNano())
 	n := rand.Intn(len(files))
-
-	// r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	// n := r.Intn(len(files))
 
 	file := files[n]
 

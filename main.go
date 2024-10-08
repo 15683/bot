@@ -4,14 +4,14 @@ import (
 	"flag"
 	"log"
 
-	tgClient "github.com/15683/bot/clients/telegram"
-	event_consumer "github.com/15683/bot/consumer/event-consumer"
-	"github.com/15683/bot/events/telegram"
-	"github.com/15683/bot/storage/files"
+	tgClient "bot/clients/telegram"
+	event_consumer "bot/consumer/event-consumer"
+	"bot/events/telegram"
+	"bot/storage/files"
 )
 
 const (
-	tgBotHost   = "api.telegram.org"
+	tgBotHost   = "https://api.telegram.org"
 	storagePath = "storage"
 	batchSize   = 100
 )

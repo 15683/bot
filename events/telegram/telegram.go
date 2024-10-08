@@ -3,10 +3,10 @@ package telegram
 import (
 	"errors"
 
-	"github.com/15683/bot/clients/telegram"
-	"github.com/15683/bot/events"
-	"github.com/15683/bot/lib/e"
-	"github.com/15683/bot/storage"
+	"bot/clients/telegram"
+	"bot/events"
+	"bot/lib/e"
+	"bot/storage"
 )
 
 type Processor struct {
@@ -62,7 +62,7 @@ func (p *Processor) Process(event events.Event) error {
 	}
 }
 
-func (p *Processor) processMessage(event events.Event) {
+func (p *Processor) processMessage(event events.Event) error {
 	meta, err := meta(event)
 	if err != nil {
 		return e.Wrap("can't process message", err)
@@ -78,7 +78,7 @@ func (p *Processor) processMessage(event events.Event) {
 func meta(event events.Event) (Meta, error) {
 	res, ok := event.Meta.(Meta)
 	if !ok {
-		return Meta{}, e.Wrap("can't get meta")
+		return Meta{}, e.Wrap("can't get meta", ErrUnknownMetaType)
 	}
 
 	return res, nil

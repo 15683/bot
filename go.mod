@@ -1,3 +1,3 @@
-module github.com/15683/bot
+module bot
 
 go 1.23.0

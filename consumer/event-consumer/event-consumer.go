@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/15683/bot/events"
+	"bot/events"
 )
 
 type Consumer struct {

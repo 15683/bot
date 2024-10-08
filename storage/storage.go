@@ -6,12 +6,12 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/15683/bot/lib/e"
+	"bot/lib/e"
 )
 
 type Storage interface {
 	Save(p *Page) error
-	PickRandom(UserName string) (*Page, error)
+	PickRandom(userName string) (*Page, error)
 	Remove(p *Page) error
 	IsExists(p *Page) (bool, error)
 }
